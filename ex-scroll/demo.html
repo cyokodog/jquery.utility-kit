@@ -67,7 +67,16 @@ jQuery(function($){
 	<div id="y" class="progress-bar"/>
 </div>
 <div id="scrollbox"><div>Scroll Me</div></div>
-<div id="log">Status</div>
+<table id="status" class="table table-bordered">
+<thead>
+	<tr><th rowspan="2">status<br/>
+	<button id="clear" class="btn btn-success">clear</button></th>
+	<th colspan="2">position</th>
+	<th colspan="2">range</th></tr>
+	<tr><th>top</th><th>left</th><th>x</th><th>y</th></tr>
+</thead>
+<tbody></tbody>
+</table>
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
 $('#scrollbox').exScroll(function(api){
@@ -78,19 +87,19 @@ $('#scrollbox').exScroll(function(api){
 		if(api.isScrollEnd()) target.removeClass('progress-bar-info');
 		var pos = api.getScrollPosition();
 		target.width((pos[dist] / 300 * 100)+'%')
-		$('#log').prepend(
-			dist + ' scroll ' + 
-			api.getScrollStatus() +
-			' (top:'+pos.y+', left:'+pos.x+')'+
-			'<br/>'
-		);
+		$('#status tbody').prepend('<tr>'+
+			'<td>' + dist + ' scroll ' + api.getScrollStatus() + '</td>' +
+			'<td>' + pos.top + '</td>' +
+			'<td>' + pos.left + '</td>' +
+			'<td>' + api.getRangeX() + '</td>' +
+			'<td>' + api.getRangeY() + '</td>' +
+		'</tr>');
 	}
 });
+$('#clear').on('click', function(){$('#status tbody').empty()});
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
-#log,
 #scrollbox{
-	margin:8px;
 	width:150px;
 	height:150px;
 	overflow:scroll;
@@ -99,14 +108,6 @@ $('#scrollbox').exScroll(function(api){
 #scrollbox div{
 	width:450px;
 	height:450px;
-}
-#log{
-	padding:8px;
-	width:240px;
-	background:#5588aa;
-	color:#fff;
-	overflow-y:scroll;
-	overflow-x:hidden;
 }
 </textarea>
 			</div>
