@@ -5,24 +5,20 @@
 <title>Ex Scroll | jQuery Plugin :: Demo</title>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" >
 <link href="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
-<style>
-</style>
-
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/google-code-prettify/prettify.js"></script>
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.js"></script>
+<script src="http://cyokodog.github.io/jquery.ex-code-prettify/behave/behave.js"></script>
 <script src="jquery.ex-scroll.js"></script>
 <script>
 jQuery(function($){
-
 	$('textarea.code').exCodePrettify({
 		tabToSpace : true,
 		showDemo : true,
-		editCode : true
+		editCode : true,
+		behaveJS : true
 	});
-
-
 });
 </script>
 </head>
@@ -56,7 +52,6 @@ jQuery(function($){
 
 	<div class="container">
 
-		<!-- Demo1 -->
 		<div class="demo">
 			<div class="ex-code-prettify demo-right">
 <textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
@@ -66,7 +61,7 @@ jQuery(function($){
 <span>Scroll Y</span><div class="progress">
 	<div id="y" class="progress-bar"/>
 </div>
-<div id="scrollbox"><div>Scroll Me</div></div>
+<div id="scrollbox"><span id="scrollme">Scroll Me</span><div></div></div>
 <table id="status" class="table table-bordered">
 <thead>
 	<tr><th rowspan="2">status<br/>
@@ -80,21 +75,31 @@ jQuery(function($){
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
 $('#scrollbox').exScroll(function(api){
-	var dist = api.isScrollX() ? 'x' : api.isScrollY() ? 'y' : '';
-	if(dist){
-		var target = $('#'+dist);
-		if(api.isScrollStart()) target.addClass('progress-bar-info');
-		if(api.isScrollEnd()) target.removeClass('progress-bar-info');
-		var pos = api.getScrollPosition();
-		target.width((pos[dist] / 300 * 100)+'%')
-		$('#status tbody').prepend('<tr>'+
-			'<td>' + dist + ' scroll ' + api.getScrollStatus() + '</td>' +
-			'<td>' + pos.top + '</td>' +
-			'<td>' + pos.left + '</td>' +
-			'<td>' + api.getRangeX() + '</td>' +
-			'<td>' + api.getRangeY() + '</td>' +
-		'</tr>');
+	//API より値を取得
+	var dist = api.getDirection(); //向き
+	var timing = api.getTiming(); //タイミング
+	var pos = api.getPosition(); //位置
+	var range = api.getRange(); //移動量
+
+	//グラフ表示
+	var graph = $('#'+dist);
+	if(timing == 'start') graph.addClass('progress-bar-info');
+	if(timing == 'end') {
+		graph.removeClass('progress-bar-info');
+		graph.stop().animate({width : (pos[dist] / 300 * 100)+'%'})
+
+		//ラベル位置補正
+		$('#scrollme').stop().animate({top:pos.top, left:pos.left})
 	}
+
+	//ステータス表示
+	$('#status tbody').prepend('<tr>'+
+		'<td>' + dist + ' scroll ' + timing + '</td>' +
+		'<td>' + pos.top + '</td>' +
+		'<td>' + pos.left + '</td>' +
+		'<td>' + range.x + '</td>' +
+		'<td>' + range.y + '</td>' +
+	'</tr>');
 });
 $('#clear').on('click', function(){$('#status tbody').empty()});
 </textarea>
@@ -104,10 +109,18 @@ $('#clear').on('click', function(){$('#status tbody').empty()});
 	height:150px;
 	overflow:scroll;
 	display:inline-block;
+	position:relative;
 }
 #scrollbox div{
 	width:450px;
 	height:450px;
+}
+#scrollme{
+	margin:32px;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100px;
 }
 </textarea>
 			</div>

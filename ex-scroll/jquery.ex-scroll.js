@@ -1,5 +1,5 @@
 /*
- * 	Ex Scroll 0.2 - jQuery plugin
+ * 	Ex Scroll 0.2.1 - jQuery plugin
  *	written by cyokodog
  *
  *	Copyright (c) 2013 cyokodog 
@@ -20,23 +20,20 @@
 		if(typeof option == 'function') option = {onScroll : option};
 		var o = this,c = o.config = $.extend(true,{}, plugin.defaults, option);
 		c.target = target;
-		c.range = c.prevRange = {};
-		c.scrollStatus = c.prevScrollStatus = plugin.status.SCROLL_END;
-		c.scrollPosition = o.getPosition();
+		c.position = {};
+		c.ragne = {};
+		o._setStatus();
+		c.timing = 'end';
 		var timer;
 		c.target.scroll(function(event){
 			o.event = event;
-			if(o.setStatus()){
-				c.scrollStatus = (
-					o.isScrollEnd() ? plugin.status.SCROLL_START :
-						o.isScrollStart() ? plugin.status.SCROLL_NOW : c.scrollStatus
-				);
-				c.onScroll.apply(o, [o]);
-			}
+			o._setStatus();
+			c.timing = c.timing == 'end' ? 'start' : 'now';
+			c.onScroll.apply(o, [o]);
 			if(timer) clearTimeout(timer);
 			timer = setTimeout(function(){
-				o.setStatus();
-				c.scrollStatus = plugin.status.SCROLL_END;
+				o._setStatus();
+				c.timing = 'end';
 				c.onScroll.apply(o, [o]);
 			},c.delay);
 		});
@@ -44,79 +41,58 @@
 
 	// API
 	$.extend(plugin.prototype, {
-		getPosition : function(){
+		_setStatus : function(){
 			var o = this, c = o.config;
-			return {
-				top : c.target.scrollTop(),
-				left : c.target.scrollLeft()
-			};
-		},
-		setStatus : function(){
-			var o = this, c = o.config;
-			var position = o.getPosition();
-			position.x = position.left;
-			position.y = position.top;
-			var y = position.top - c.scrollPosition.top;
-			var x = position.left - c.scrollPosition.left;
-			if(y != 0 || x != 0){
-				c.prevRange = c.range;
-				c.range = {x:x ,y:y};
-				c.prevScrollStatus = c.scrollStatus;
-				c.scrollPosition = position;
-				return true;
+			var top = c.target.scrollTop();
+			var left = c.target.scrollLeft();
+			var pos = {top:top, left:left, y:top, x:left};
+			var y = pos.top - (c.position.top || 0);
+			var x = pos.left - (c.position.left || 0);
+			if(x != 0 || y != 0){
+				c.position = pos;
+				c.range = {top:y, left:x, y:y, x:x};
 			}
-			return false;
 		},
-		getScrollStatus : function(){
-			var o = this, c = o.config;
-			return c.scrollStatus;
+
+		// スクロール状況を "start", "now", "end" の何れかで返す。
+		getTiming : function(){
+			return this.config.timing;
 		},
-		getScrollPosition : function(){
-			var o = this, c = o.config;
-			return c.scrollPosition;
+
+		// スクロール向きを "x", "y" の何れかで返す。
+		getDirection : function(){
+			var range = this.config.range;
+			return range.x != 0 ? 'x' : (range.y != 0 ? 'y' : '');
 		},
-		getRangeX : function(){
-			var o = this, c = o.config;
-			return c.range.x;
+
+		// スクロール位置をオブジェクト（{top:integer, left:integer, x:integer, y:integer}）で返す。
+		getPosition : function(){
+			return this.config.position;
 		},
-		getRangeY : function(){
-			var o = this, c = o.config;
-			return c.range.y;
+
+		// 前回位置からのスクロール量をオブジェクト（{top:integer, left:integer, x:integer, y:integer}）で返す。
+		getRange : function(){
+			return this.config.range;
 		},
+
+		// 水平方向のスクロールの有無を真偽値（true or false）で返す。
 		isScrollX : function(){
-			var o = this, c = o.config;
-			return o.getRangeX() != 0;
+			return this.config.range.x != 0;
 		},
+
+		// 垂直方向のスクロールの有無を真偽値（true or false）で返す。
 		isScrollY : function(){
-			var o = this, c = o.config;
-			return o.getRangeY() != 0;
-		},
-		isScrollStart : function(){
-			var o = this, c = o.config;
-			return c.scrollStatus == plugin.status.SCROLL_START;
-		},
-		isScrollNow : function(){
-			var o = this, c = o.config;
-			return c.scrollStatus == plugin.status.SCROLL_NOW;
-		},
-		isScrollEnd : function(){
-			var o = this, c = o.config;
-			return c.scrollStatus == plugin.status.SCROLL_END;
+			return this.config.range.y != 0;
 		}
 	});
 
 	// Setting
 	$.extend(plugin,{
-		status : {
-			SCROLL_START : 'start',
-			SCROLL_NOW : 'now',
-			SCROLL_END : 'end',
-		},
 		defaults : {
 			delay : 100,
 			onScroll : function(api){}
 		},
-		version : '0.2',
+		version : '0.2.1',
 		id : 'ex-scroll',
 		paramId : 'ex-scroll-param'
 	});
@@ -130,7 +106,4 @@
 		});
 	}
 
-
-
 })(jQuery);
-
