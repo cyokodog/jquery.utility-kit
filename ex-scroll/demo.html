@@ -61,7 +61,9 @@ jQuery(function($){
 <span>Scroll Y</span><div class="progress">
 	<div id="y" class="progress-bar"/>
 </div>
-<div id="scrollbox"><span id="scrollme">Scroll Me</span><div></div></div>
+<div id="scrollbox">
+	<span id="scrollme">Scroll Me</span><div></div>
+</div>
 <table id="status" class="table table-bordered">
 <thead>
 	<tr><th rowspan="2">status<br/>
@@ -86,11 +88,10 @@ $('#scrollbox').exScroll(function(api){
 	if(timing == 'start') graph.addClass('progress-bar-info');
 	if(timing == 'end') {
 		graph.removeClass('progress-bar-info');
-		graph.stop().animate({width : (pos[dist] / 300 * 100)+'%'})
-
 		//ラベル位置補正
 		$('#scrollme').stop().animate({top:pos.top, left:pos.left})
 	}
+	graph.css({width : (pos[dist] / 300 * 100)+'%'})
 
 	//ステータス表示
 	$('#status tbody').prepend('<tr>'+
