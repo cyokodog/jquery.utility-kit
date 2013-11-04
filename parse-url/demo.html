@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Ex Scroll | jQuery Plugin :: Demo</title>
+<title>Parse URL | jQuery Plugin :: Demo</title>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" >
 <link href="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
 <style>
@@ -15,7 +15,7 @@ h1{
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/google-code-prettify/prettify.js"></script>
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.js"></script>
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/behave/behave.js"></script>
-<script src="jquery.ex-scroll.js"></script>
+<script src="jquery.parse-url.js"></script>
 <script>
 jQuery(function($){
 	$('textarea.code').exCodePrettify({
@@ -40,7 +40,7 @@ jQuery(function($){
 			</div>
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="http://www.cyokodog.net/blog/ex-scroll-doc/" target="_blank"><span class="glyphicon glyphicon-book"></span> Document</a></li>
+					<li><a href="http://www.cyokodog.net/blog/parse-url-doc/" target="_blank"><span class="glyphicon glyphicon-book"></span> Document</a></li>
 					<li><a href="https://github.com/cyokodog/jquery.utility-kit" target="_blank"><b class="glyphicon glyphicon-download-alt"></b> Download</a></li>
 				</ul>
 			</div>
@@ -49,8 +49,8 @@ jQuery(function($){
 
 	<div class="container">
 		<div class="page-header">
-			<h1>Ex Scroll <small>:: jQuery Utility Kit</small></h1>
-			<p class="lead">$( contents ).exScroll();</p>
+			<h1>Parse URL <small>:: jQuery Utility Kit</small></h1>
+			<p class="lead">$.parseURL( url );</p>
 		</div>
 	</div>
 
@@ -60,74 +60,45 @@ jQuery(function($){
 		<div class="demo">
 			<div class="ex-code-prettify demo-right">
 <textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
-<span>Scroll X</span><div class="progress">
-	<div id="x" class="progress-bar"/>
+<div class="input-group">
+	<input id="link" type="text" class="form-control"/>
+	<span class="input-group-btn">
+		<button id="parse" class="btn btn-success">Parse</button>
+	</span>
 </div>
-<span>Scroll Y</span><div class="progress">
-	<div id="y" class="progress-bar"/>
-</div>
-<div id="scrollbox">
-	<span id="scrollme">Scroll Me</span><div></div>
-</div>
-<table id="status" class="table table-bordered">
-<thead>
-	<tr><th rowspan="2">status<br/>
-	<button id="clear" class="btn btn-success">clear</button></th>
-	<th colspan="2">position</th>
-	<th colspan="2">range</th></tr>
-	<tr><th>top</th><th>left</th><th>x</th><th>y</th></tr>
-</thead>
-<tbody></tbody>
-</table>
+<dl id="result"></dl>
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
-$('#scrollbox').exScroll(function(api){
-	//API より値を取得
-	var dist = api.getDirection(); //向き
-	var timing = api.getTiming(); //タイミング
-	var pos = api.getPosition(); //位置
-	var range = api.getRange(); //移動量
 
-	//グラフ表示
-	var graph = $('#'+dist);
-	if(timing == 'start') graph.addClass('progress-bar-info');
-	if(timing == 'end') {
-		graph.removeClass('progress-bar-info');
-		//ラベル位置補正
-		$('#scrollme').stop().animate({top:pos.top, left:pos.left})
-	}
-	graph.css({width : (pos[dist] / 300 * 100)+'%'})
-
-	//ステータス表示
-	$('#status tbody').prepend('<tr>'+
-		'<td>' + dist + ' scroll ' + timing + '</td>' +
-		'<td>' + pos.top + '</td>' +
-		'<td>' + pos.left + '</td>' +
-		'<td>' + range.x + '</td>' +
-		'<td>' + range.y + '</td>' +
-	'</tr>');
+var link = $('#link').val('http://domain/app/page.html?p1=aaa&p2=bbb#ccc');
+var show = function(name, value){
+	$('#result').
+		append($('<dt/>').text(name)).
+		append($('<dd/>').text(value))
+	;
+}
+var parse = function(){
+	var r = $.parseURL($('#link').val());
+	$('#result').empty();
+	show('href', r['href']);
+	show('protocol', r['protocol']);
+	show('host', r['host']);
+	show('hostname', r['hostname']);
+	show('port', r['port']);
+	show('pathname', r['pathname']);
+	show('hash', r['hash']);
+	show('search', r['search']);
+	show('query', r['query']);
+	var q = r['query'];
+	$.each(q, function(name){
+		show(name, q[name]);
+	});
+}
+$('#parse').on('click', function(){
+	parse();
 });
-$('#clear').on('click', function(){$('#status tbody').empty()});
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
-#scrollbox{
-	width:150px;
-	height:150px;
-	overflow:scroll;
-	display:inline-block;
-	position:relative;
-}
-#scrollbox div{
-	width:450px;
-	height:450px;
-}
-#scrollme{
-	margin:32px;
-	position:absolute;
-	top:0;
-	left:0;
-	width:100px;
-}
 </textarea>
 			</div>
 		</div>
