@@ -11,3 +11,6 @@ type ex-scroll\jquery.ex-scroll.js >> jquery.utility-kit.js
 
 REM jquery.parse-url
 type parse-url\jquery.parse-url.js >> jquery.utility-kit.js
+
+REM jquery.keyinfo
+type keyinfo\jquery.keyinfo.js >> jquery.utility-kit.js
