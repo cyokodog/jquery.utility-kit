@@ -43,6 +43,6 @@
 		return r;
 	}
 	k.isNUMBER = function(code){
-		return '0123456789'.indexOf(String.fromCharCode(code)) >= 0;
+		return (code >= 96 && code <= 105) || (code >= 48 && code <= 57);
 	}
 })(jQuery);
