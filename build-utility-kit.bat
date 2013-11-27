@@ -14,3 +14,6 @@ type parse-url\jquery.parse-url.js >> jquery.utility-kit.js
 
 REM jquery.keyinfo
 type keyinfo\jquery.keyinfo.js >> jquery.utility-kit.js
+
+REM jquery.bookmarklet
+type bookmarklet\jquery.bookmarklet.js >> jquery.utility-kit.js

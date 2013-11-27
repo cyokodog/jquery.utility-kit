@@ -9,7 +9,7 @@ jquery.utility-kit
 	- URL 文字列を解析する jQuery プラグイン [Demo](http://cyokodog.github.io/jquery.utility-kit/parse-url/demo.html) [詳細](http://www.cyokodog.net/blog/parse-url-doc/)
 - keyinfo
 	- 入力キーの種類を調べることができる jQuery プラグイン [Demo](http://cyokodog.github.io/jquery.utility-kit/keyinfo/demo.html) [詳細](http://www.cyokodog.net/blog/keyinfo-doc/)
-
-
+- bookmarklet
+	- JS ファイルのリンクをブックマークレット形式に変換する事のできる jQuery プラグイン [Demo](http://cyokodog.github.io/jquery.utility-kit/bookmarklet/demo.html) [詳細](http://www.cyokodog.net/blog/bookmarklet-doc/)
 
 
