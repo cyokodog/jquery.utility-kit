@@ -224,3 +224,53 @@
 		});
 	}
 })(jQuery);
+/*
+ * 	Keep Position 0.2 - jQuery plugin
+ *	written by cyokodog
+ *
+ *	Copyright (c) 2013 cyokodog 
+ *		http://www.cyokodog.net/
+ *		http://cyokodog.tumblr.com/
+ *		http://d.hatena.ne.jp/cyokodog/)
+ *	MIT LICENCE
+ *
+ *	Built for jQuery library
+ *	http://jquery.com
+ *
+ */
+
+;(function($){
+
+	var plugin, c;
+	plugin = $.keepPosition = {
+		reload : function(){
+			plugin._setInfo();
+			location.reload();
+		},
+		_setInfo : function(){
+			c.nowSubmit = true;
+			$.cookie(c.key, $(window).scrollTop());
+		}
+	};
+	c = plugin.config = {
+		nowSubmit : false,
+		key : 'keep-position-' + location.pathname
+	}
+	$.fn.keepPosition = function(){
+		this.each(function(){
+			var target = $(this);
+			target.on(target.prop('tagName') == 'FORM' ? 'submit' : 'click',function(){
+				plugin._setInfo();
+			});
+		});
+	}
+	$(window).on('unload.keep-position',function(){
+		if(!c.nowSubmit){
+			$.removeCookie(c.key);
+		}
+	});
+	setTimeout(function(){
+		$(window).scrollTop($.cookie(c.key));
+	},10);
+
+})(jQuery);

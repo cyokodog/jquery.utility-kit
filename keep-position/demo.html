@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Keep Position | jQuery Plugin :: Demo</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="screen" >
+<link href="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.css" rel="stylesheet" type="text/css" media="screen" >
+<style>
+body{
+	padding-bottom:2000px;
+}
+h1{
+	text-transform:uppercase;
+}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="http://cyokodog.github.io/jquery.ex-code-prettify/google-code-prettify/prettify.js"></script>
+<script src="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.js"></script>
+<script src="http://cyokodog.github.io/jquery.ex-code-prettify/behave/behave.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.min.js"></script>
+<script src="jquery.hash-contents/jquery.hash-contents.js"></script>
+<script src="jquery.keep-position.js"></script>
+<script>
+jQuery(function($){
+
+	//control display
+	$('div.demo').hashContents({
+		idPrefix : 'Demo',
+		listTo : 'ul.index',
+		activeTitleTo : 'span.demo-title',
+		useCookie:true,
+		onActive : function(api){
+			$('textarea.code').exCodePrettify({
+				tabToSpace : true,
+				showDemo : true,
+				editCode : true,
+				behaveJS : true
+			});
+		}
+	});
+});
+</script>
+</head>
+<body>
+	<div class="navbar navbar-default navbar-fixed-topx" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="http://www.cyokodog.net/blog/keep-position-doc/" target="_blank"><span class="glyphicon glyphicon-book"></span> Document</a></li>
+					<li><a href="https://github.com/cyokodog/jquery.utility-kit" target="_blank"><b class="glyphicon glyphicon-download-alt"></b> Download</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="page-header">
+			<h1>Keep Position<small>:: jQuery Utility Kit</small></h1>
+			<p class="lead">$( link | form ).keepPosition()</p>
+			<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					<span class="demo-title"></span> <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu index" role="menu">
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container">
+
+<div class="demo">
+<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<p>ページ切替時、スクロール位置が保持されます</p>
+<ul class="nav nav-tabs">
+	<li><a href="?home">Home</a></li>
+	<li><a href="?profile">Profile</a></li>
+	<li><a href="?message">Messages</a></li>
+</ul>
+<div class="contents">
+<span>Query String is</span>
+<strong class="query-string"></strong>
+</div>
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
+var q = location.search;
+$('.query-string').text(q || 'none');
+var search = q || '?home';
+$('ul.nav-tabs li').each(function(){
+	var t = $(this), a = t.find('> a');
+	a.prop('search') != search || t.addClass('active');
+});
+
+// keep position
+$('ul.nav-tabs a').keepPosition();
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+.contents{
+	margin:16px;
+}
+</textarea>
+</div>
+</div>
+
+<div class="demo">
+<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<form class="sample" action="demo.html">
+<input type="text" name="sample-val" class="form-control"/><br/>
+<input type="submit" class="btn btn-success" value="SAVE"/>
+</form>
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
+$('input.form-control').val(location.search.replace(/^.*sample-val=/,''));
+$('form.sample').keepPosition();
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+form.sample{
+	padding: 16px;
+	border: solid 1px #e0e0e0;
+	border-radius: 4px;
+	background:#f0f0f0;
+}
+</textarea>
+</div>
+</div>
+
+
+
+<div class="demo">
+<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+
+
+
+<p>データ編集後、スクロール位置を保持したままページをリロードします。</p>
+<table class="table">
+<thead>
+	<tr><th>No</th><th>Value</th></tr>
+</thead>
+<tbody>
+	<tr><td>#1</td><td><a class="edit"></a></td></td>
+	<tr><td>#2</td><td><a class="edit"></a></a></td></td>
+	<tr><td>#3</td><td><a class="edit"></a></a></td></td>
+</tbody>
+</table>
+
+
+
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
+//modal &amp; show data
+var modal = (function(callback){
+	var editor = $('<input class="editor form-control"/>').
+	on('keypress', function(e){
+		if(e.keyCode == 13){
+			$.cookie('v' + editor.data('edit-index'), editor.val());
+			modal.onKeyEnter();
+		}
+	}).
+	prependTo('body');
+	$('body').on('click','a.edit',function(){
+		var t = $(this);
+		editor.data('edit-index', t.data('index')).val(t.text()).
+		show().focus()
+	});
+	$('table tbody tr').each(function(i){
+		var tr = $(this);
+		tr.find('.edit').data('index', i).text($.cookie('v'+i)||'(none)');
+	});
+	return arguments.callee;
+})();
+
+//keep position
+modal.onKeyEnter = function(){
+	$.keepPosition.reload();
+};
+
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+.editor{
+	position:fixed;
+	z-index:99999;
+	top:45%;
+	left:35%;
+	width:30%;
+	height:50px;
+	border-width:5px;
+	display:none;
+}
+</textarea>
+</div>
+</div>
+
+
+
+	</div>
+
+<!--
+	<div class="container">
+
+		<div class="demo">
+			<div class="ex-code-prettify demo-right">
+<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
+<p>スクロールした状態で、以下 リンク／ボタンをクリックしてください。
+ページがリロードされてもスクロール位置がキープされたままとなります。</p>
+<div class="section">
+	<h4>Form Submit</h4>
+	<form class="demo" action="demo.html">
+		<div class="input-group">
+			<input type="text" class="form-control" name="formdata"/>
+			<span class="input-group-btn">
+				<input type="submit" class="btn btn-primary" value="Submit"/>
+			</span>
+		</div>
+	</form>
+</div>
+<div class="section">
+	<h4>Link Click</h4>
+	<a class="demo" href="demo.html?linkclick=true">Reload Page</a>
+</div>
+<div class="section">
+	<h4>Reload Method</h4>
+	<button class="demo btn btn-success">Button</button>
+</div>
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
+$('form.demo').keepPosition();
+$('a.demo').keepPosition();
+$('button.demo').on('click', function(){
+	$.keepPosition.reload();
+});
+</textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+div.section{
+	margin-top:160px;
+}
+</textarea>
+			</div>
+		</div>
+	</div>
+-->
+</body>
+</html>

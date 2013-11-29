@@ -17,3 +17,6 @@ type keyinfo\jquery.keyinfo.js >> jquery.utility-kit.js
 
 REM jquery.bookmarklet
 type bookmarklet\jquery.bookmarklet.js >> jquery.utility-kit.js
+
+REM jquery.keep-position
+type keep-position\jquery.keep-position.js >> jquery.utility-kit.js
