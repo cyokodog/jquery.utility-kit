@@ -22,8 +22,7 @@ h1{
 <script src="jquery.keep-position.js"></script>
 <script>
 jQuery(function($){
-
-	var demoId = location.hash || $.cookie('keep-position-demo-id') || 'demo1';
+	var demoId = location.hash || $.cookie('keep-position-demo-id') || '#demo1';
 	$.cookie('keep-position-demo-id', demoId);
 	var demoNo = demoId.replace(/^#demo([0-9])$/,'$1');
 	if(!demoNo){
@@ -36,9 +35,7 @@ jQuery(function($){
 
 	$('textarea.code').exCodePrettify({
 		tabToSpace : true,
-		showDemo : true,
-		editCode : true,
-		behaveJS : true
+		showDemo : true
 	});
 
 });
@@ -163,7 +160,7 @@ form.sample{
 var tableEditor = (function(){
 	var callee = arguments.callee;
 	var editor = $('<input class="editor form-control"/>').
-	on('keypress', function(e){
+	on('keydown', function(e){
 		if(e.keyCode == 13){
 			$.cookie('v' + editor.data('edit-index'), editor.val());
 			callee.onSave();
