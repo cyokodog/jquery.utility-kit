@@ -19,26 +19,28 @@ h1{
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/jquery.ex-code-prettify.js"></script>
 <script src="http://cyokodog.github.io/jquery.ex-code-prettify/behave/behave.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.min.js"></script>
-<script src="jquery.hash-contents/jquery.hash-contents.js"></script>
 <script src="jquery.keep-position.js"></script>
 <script>
 jQuery(function($){
 
-	//control display
-	$('div.demo').hashContents({
-		idPrefix : 'Demo',
-		listTo : 'ul.index',
-		activeTitleTo : 'span.demo-title',
-		useCookie:true,
-		onActive : function(api){
-			$('textarea.code').exCodePrettify({
-				tabToSpace : true,
-				showDemo : true,
-				editCode : true,
-				behaveJS : true
-			});
-		}
+	var demoId = location.hash || $.cookie('keep-position-demo-id') || 'demo1';
+	$.cookie('keep-position-demo-id', demoId);
+	var demoNo = demoId.replace(/^#demo([0-9])$/,'$1');
+	if(!demoNo){
+		alert('urlが不正です');
+		return;
+	}
+	$('div.demo').each(function(i){
+		if(i != demoNo - 1) $(this).remove();
 	});
+
+	$('textarea.code').exCodePrettify({
+		tabToSpace : true,
+		showDemo : true,
+		editCode : true,
+		behaveJS : true
+	});
+
 });
 </script>
 </head>
@@ -66,13 +68,6 @@ jQuery(function($){
 		<div class="page-header">
 			<h1>Keep Position<small>:: jQuery Utility Kit</small></h1>
 			<p class="lead">$( link | form ).keepPosition()</p>
-			<div class="btn-group">
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<span class="demo-title"></span> <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu index" role="menu">
-				</ul>
-			</div>
 		</div>
 	</div>
 
@@ -120,8 +115,11 @@ $('ul.nav-tabs a').keepPosition();
 <input type="text" name="sample-val" class="form-control"/><br/>
 <input type="submit" class="btn btn-success" value="SAVE"/>
 </form>
+<span>Query String is</span>
+<strong class="query-string"></strong>
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
+$('.query-string').text(location.search || 'none');
 $('input.form-control').val(location.search.replace(/^.*sample-val=/,''));
 $('form.sample').keepPosition();
 </textarea>
@@ -160,32 +158,44 @@ form.sample{
 
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
-//modal &amp; show data
-var modal = (function(callback){
+
+//Easy Table Editor
+var tableEditor = (function(){
+	var callee = arguments.callee;
 	var editor = $('<input class="editor form-control"/>').
 	on('keypress', function(e){
 		if(e.keyCode == 13){
 			$.cookie('v' + editor.data('edit-index'), editor.val());
-			modal.onKeyEnter();
+			callee.onSave();
 		}
-	}).
-	prependTo('body');
-	$('body').on('click','a.edit',function(){
-		var t = $(this);
-		editor.data('edit-index', t.data('index')).val(t.text()).
-		show().focus()
+		if(e.keyCode == 27) editor.hide();
+	}).prependTo(
+		$('body').on('click','a.edit',function(){
+			var t = $(this);
+			editor.data('edit-index', t.data('index')).val(t.text()).
+			show().select();
+		})
+	);
+	return $.extend(callee, {
+		bind : function(table){
+			$(table).find('tbody tr').each(function(i){
+				$(this).find('.edit').data('index', i).
+				text($.cookie('v'+i)||'(none)');
+			});
+			return callee;
+		},
+		onSave : function(f){
+			callee.onSave = f;
+			return callee;
+		}
 	});
-	$('table tbody tr').each(function(i){
-		var tr = $(this);
-		tr.find('.edit').data('index', i).text($.cookie('v'+i)||'(none)');
-	});
-	return arguments.callee;
 })();
 
-//keep position
-modal.onKeyEnter = function(){
+//bind
+tableEditor.bind('table').onSave(function(){
+	//keep position
 	$.keepPosition.reload();
-};
+});
 
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
@@ -199,57 +209,16 @@ modal.onKeyEnter = function(){
 	border-width:5px;
 	display:none;
 }
-</textarea>
-</div>
-</div>
-
-
-
-	</div>
-
-<!--
-	<div class="container">
-
-		<div class="demo">
-			<div class="ex-code-prettify demo-right">
-<textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
-<p>スクロールした状態で、以下 リンク／ボタンをクリックしてください。
-ページがリロードされてもスクロール位置がキープされたままとなります。</p>
-<div class="section">
-	<h4>Form Submit</h4>
-	<form class="demo" action="demo.html">
-		<div class="input-group">
-			<input type="text" class="form-control" name="formdata"/>
-			<span class="input-group-btn">
-				<input type="submit" class="btn btn-primary" value="Submit"/>
-			</span>
-		</div>
-	</form>
-</div>
-<div class="section">
-	<h4>Link Click</h4>
-	<a class="demo" href="demo.html?linkclick=true">Reload Page</a>
-</div>
-<div class="section">
-	<h4>Reload Method</h4>
-	<button class="demo btn btn-success">Button</button>
-</div>
-</textarea>
-<textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
-$('form.demo').keepPosition();
-$('a.demo').keepPosition();
-$('button.demo').on('click', function(){
-	$.keepPosition.reload();
-});
-</textarea>
-<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
-div.section{
-	margin-top:160px;
+.edit{
+	cursor: pointer;
 }
 </textarea>
-			</div>
-		</div>
+</div>
+</div>
+
+
+
 	</div>
--->
+
 </body>
 </html>

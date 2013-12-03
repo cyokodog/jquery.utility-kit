@@ -47,27 +47,10 @@
 			}
 		});
 		var pos = $.cookie(c.key);
-
 		var timer = [0,10,100,200,300];
 		$(timer).each(function(i){
 			setTimeout(function(){win.scrollTop() == pos || win.scrollTop(pos||0);}, timer[i]);
 		});
-
-
 	});
 
-/*
-	$(function(){
-		$(window).on('unload.keep-position',function(){
-			if(!c.nowSubmit){
-				$.removeCookie(c.key);
-			}
-		});
-		var timer = [10];
-		$(timer).each(function(i){
-			setTimeout(function(){var pos = $.cookie(c.key);!pos || $(window).scrollTop($.cookie(c.key));}, timer[i]);
-		});
-
-	});
-*/
 })(jQuery);

@@ -264,13 +264,19 @@
 			});
 		});
 	}
-	$(window).on('unload.keep-position',function(){
-		if(!c.nowSubmit){
-			$.removeCookie(c.key);
-		}
+
+	$(function(){
+		var win = $(window);
+		win.on('unload.keep-position',function(){
+			if(!c.nowSubmit){
+				$.removeCookie(c.key);
+			}
+		});
+		var pos = $.cookie(c.key);
+		var timer = [0,10,100,200,300];
+		$(timer).each(function(i){
+			setTimeout(function(){win.scrollTop() == pos || win.scrollTop(pos||0);}, timer[i]);
+		});
 	});
-	setTimeout(function(){
-		$(window).scrollTop($.cookie(c.key));
-	},10);
 
 })(jQuery);
