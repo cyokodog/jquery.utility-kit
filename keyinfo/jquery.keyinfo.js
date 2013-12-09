@@ -1,5 +1,5 @@
 /*
- * 	Keyinfo 0.1 - jQuery plugin
+ * 	Keyinfo 0.2 - jQuery plugin
  *	written by cyokodog
  *
  *	Copyright (c) 2013 cyokodog 
@@ -28,13 +28,15 @@
 		DOWN : 40,
 		DEL : 46
 	}
+	var f = {};
 	$.each(k, function(i){
 		var name = 'is' + i;
-		k[name] = function(code){
+		f[name] = function(code){
 			return arguments.callee.code == code;
 		}
-		k[name].code = k[i];
+		f[name].code = k[i];
 	});
+	$.extend(true, k, f); // for IE8
 	k.isCONTROL = function(code){
 		var r = false;
 		$.each(k, function(i){
