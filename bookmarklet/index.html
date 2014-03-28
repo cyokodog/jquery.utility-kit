@@ -58,21 +58,33 @@ jQuery(function($){
 	<div class="container">
 
 		<div class="demo">
-			<div class="ex-code-prettify demo-right">
+			<div class="ex-code-prettify demo-top">
 <textarea class="code" data-ex-code-prettify-param="{codeType:'html'}">
-<h4>ページ内リンクをマークダウン形式で一覧出力するブックマークレット</h4>
-<ul>
+<p>ブックマークに登録し任意のページで実行ください</p>
+<ul class="bookmarks">
 	<li>
-		<a class="bookmarklet" href="listup-markdown-link.js">
-			listup-markdown-link.js
-		</a>
+		<a class="bookmarklet" href="lib/listup-markdown-link.js">listup-markdown-link.js</a><br/>
+		表示ページの URL とページ内リンクをマークダウン形式で一覧出力するブックマークレット
+	</li>
+	<li>
+		<a class="bookmarklet" href="lib/gplus-autoload.js">gplus-autoload.js</a><br/>
+		<a href="https://plus.google.com/">Google+</a> の投稿の自動更新を有効にするブックマークレット
+	</li>
+	<li>
+		<a class="bookmarklet" href="lib/feedspot-ad-hide.js">feedspot-ad-hide.js</a><br/>
+		<a href="http://www.feedspot.com/">Feedspot</a> の広告を非表示にするブックマークレット
 	</li>
 </ul>
-<p>ブックマークに登録し任意のページで実行ください</p>
 </textarea>
 <textarea class="code" data-ex-code-prettify-param="{codeType:'script'}">
 $('a.bookmarklet').bookmarklet();
 </textarea>
+<textarea class="code" data-ex-code-prettify-param="{codeType:'css'}">
+ul.bookmarks li{
+	margin-bottom:32px;
+}
+</textarea>
+
 			</div>
 		</div>
 	</div>
